@@ -1,19 +1,48 @@
-import React from "react";
-import { View, StyleSheet, Text, TextInput, Button } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, TextInput, Button, Keyboard } from "react-native";
+import { TouchableWithoutFeedback } from "react-native-web";
+import Card from "../components/Card";
+import Input from "../components/Input";
+import Colors from '../constants/colors';
 
 const StartScreen = props => {
+
+    const [numberValue, setNumberValue] = useState('');
+
+    const numberInputHandler = inputText => {
+        setNumberValue(inputText.replace(/[^0-9]/g, ''));
+    }
+
     return (
-        <View style={styles.screen}>
-            <Text style={styles.title}>Yeni Oyna Başla!</Text>
-            <View style={styles.inputContainer}>
-                <Text>Bir sayı giriniz!</Text>
-                <TextInput />
-                <View style={styles.buttonContainer}>
-                    <Button title="Sıfırla" onPress={() => {}}/>
-                    <Button title="OK" onPress={() => {}} />
-                </View>
+        <TouchableWithoutFeedback
+            onPress={() => {
+                Keyboard.dismiss();
+            }}>
+            <View style={styles.screen}>
+                <Text style={styles.title}>Yeni Oyna Başla!</Text>
+                <Card style={styles.inputContainer}>
+                    <Text>Bir sayı giriniz!</Text>
+                    <Input
+                        style={styles.input}
+                        blurOnSubmit
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        keyboardType="numeric"
+                        maxLength={2}
+                        onChangeText={numberInputHandler}
+                        value={numberValue}
+                    />
+                    <View style={styles.buttonContainer}>
+                        <View style={styles.button}>
+                            <Button title="Sıfırla" onPress={() => { }} color={Colors.mainColor} />
+                        </View>
+                        <View style={styles.button}>
+                            <Button title="OK" onPress={() => { }} color={Colors.secondColor} />
+                        </View>
+                    </View>
+                </Card>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     )
 }
 const styles = StyleSheet.create({
@@ -23,26 +52,26 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     title: {
-        fontSize:20,
-        marginVertical:10
+        fontSize: 20,
+        marginVertical: 10
     },
-    buttonContainer : {
-        flexDirection:'row',
-        width:'100%',
+    buttonContainer: {
+        flexDirection: 'row',
+        width: '100%',
         justifyContent: 'space-between',
-        paddingHorizontal:15
+        paddingHorizontal: 15
     },
     inputContainer: {
         width: 300,
         maxWidth: '80%',
-        alignItems: 'center',
-        shadowColor: 'black',
-        shadowOffset: { width :0, height: 2},
-        shadowRadius: 6,
-        shadowOpacity: 0.30,
-        backgroundColor: 'white',
-        padding:20,
-        borderRadius: 10
+        alignItems: 'center'
+    },
+    button: {
+        width: 100
+    },
+    input: {
+        width: 50,
+        textAlign: 'center'
     }
 })
 
