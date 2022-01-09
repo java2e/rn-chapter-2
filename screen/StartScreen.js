@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, TextInput, Button, Keyboard } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-web";
+import { View, StyleSheet, Text, TextInput, Button, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
 import Card from "../components/Card";
 import Input from "../components/Input";
 import Colors from '../constants/colors';
@@ -8,9 +7,34 @@ import Colors from '../constants/colors';
 const StartScreen = props => {
 
     const [numberValue, setNumberValue] = useState('');
+    const [confirmed, setConfirmed] = useState(false);
+    const [selectedNumber, setSelectedNumber] = useState('');
 
     const numberInputHandler = inputText => {
         setNumberValue(inputText.replace(/[^0-9]/g, ''));
+    }
+
+    const resetInputHandler = () => {
+        setNumberValue('');
+    }
+    const confirmInputHandler = () => {
+        const chosenNumber = parseInt(numberValue);
+        if (chosenNumber === NaN || chosenNumber <= 0 || chosenNumber > 99) {
+            Alert.alert(
+                'Invalid Number!',
+                'Sayı 1 ila 99 arasında olmalıdır!',
+                [{ text: 'OK', style: 'destructive', onPress: resetInputHandler }]);
+            return;
+        }
+        setConfirmed(true);
+        setSelectedNumber(chosenNumber);
+        setNumberValue('');
+    }
+
+    let confirmedOutput;
+
+    if (confirmed) {
+        confirmedOutput = <Text>Seçilen Numara : {selectedNumber}</Text>
     }
 
     return (
@@ -34,13 +58,14 @@ const StartScreen = props => {
                     />
                     <View style={styles.buttonContainer}>
                         <View style={styles.button}>
-                            <Button title="Sıfırla" onPress={() => { }} color={Colors.mainColor} />
+                            <Button title="Sıfırla" onPress={resetInputHandler} color={Colors.mainColor} />
                         </View>
                         <View style={styles.button}>
-                            <Button title="OK" onPress={() => { }} color={Colors.secondColor} />
+                            <Button title="OK" onPress={confirmInputHandler} color={Colors.secondColor} />
                         </View>
                     </View>
                 </Card>
+                {confirmedOutput}
             </View>
         </TouchableWithoutFeedback>
     )
